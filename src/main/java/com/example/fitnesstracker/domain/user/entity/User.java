@@ -4,6 +4,7 @@ import com.example.fitnesstracker.domain.entity.BaseEntity;
 import com.example.fitnesstracker.domain.role.entity.Role;
 import com.example.fitnesstracker.domain.user.enumeration.MeasurementSystemEnum;
 
+import com.example.fitnesstracker.domain.workout.entity.Workout;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -53,4 +54,7 @@ public class User extends BaseEntity {
     private Integer weight;
 
     private Integer height;
+
+    @OneToMany(mappedBy = "user")
+    private Set<Workout> workouts;
 }

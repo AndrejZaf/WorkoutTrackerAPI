@@ -8,4 +8,6 @@ public class ErrorCodes {
     static public String USER_VERIFICATION_EXPIRED = "USER_VERIFICATION_EXPIRED";
 
     public static String ROLE_NOT_FOUND = "ROLE_NOT_FOUND";
+
+    public static String EXERCISE_NOT_FOUND = "EXERCISE_NOT_FOUND";
 }

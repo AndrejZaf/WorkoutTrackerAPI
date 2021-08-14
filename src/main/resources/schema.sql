@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS `spring`.`user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
+
 CREATE TABLE IF NOT EXISTS `spring`.`role` (
     `id` bigint(20) NOT NULL AUTO_INCREMENT,
     `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -53,3 +54,28 @@ CREATE TABLE IF NOT EXISTS `spring`.`exercise` (
     `primary_muscles` varchar(255) DEFAULT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE IF NOT EXISTS `spring`.`workout` (
+   `id` bigint(20) NOT NULL AUTO_INCREMENT,
+   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+   `deleted_on` datetime DEFAULT NULL,
+   `uid` varchar(255) DEFAULT NULL,
+   `name` varchar(255) DEFAULT NULL,
+   `user_id` bigint(20) NOT NULL,
+   PRIMARY KEY (`id`),
+   KEY `FKfd6lahc24vib7n7vw2ekecn00` (`user_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+CREATE TABLE IF NOT EXISTS `spring`.`workout_exercise` (
+    `id` bigint(20) NOT NULL AUTO_INCREMENT,
+    `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `deleted_on` datetime DEFAULT NULL,
+    `uid` varchar(255) DEFAULT NULL,
+    `reps` int(11) NOT NULL,
+    `rest_period` int(11) NOT NULL,
+    `exercise_id` bigint(20) DEFAULT NULL,
+    `workout_id` bigint(20) NOT NULL,
+    PRIMARY KEY (`id`),
+    KEY `FKalytxvdcpsg2e2oo8ihk55dm2` (`exercise_id`),
+    KEY `FKqultuq4g6w47iqdaf0vb8ff3j` (`workout_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;

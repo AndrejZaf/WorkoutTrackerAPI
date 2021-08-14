@@ -1,11 +1,16 @@
 package com.example.fitnesstracker.domain.exercise.entity;
 
 import com.example.fitnesstracker.domain.entity.BaseEntity;
+import com.example.fitnesstracker.domain.exercise.enumeration.*;
+import com.example.fitnesstracker.domain.workoutExercise.entity.WorkoutExercise;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.OneToOne;
 
 @Entity
 @Data
@@ -13,12 +18,20 @@ import javax.persistence.Entity;
 @AllArgsConstructor
 public class Exercise extends BaseEntity {
     private String name;
-    private String forceType;
-    private String level;
-    private String mechanic;
-    private String equipment;
-    private String primaryMuscles;
+    @Enumerated(value = EnumType.STRING)
+    private Force forceType;
+    @Enumerated(value = EnumType.STRING)
+    private Level level;
+    @Enumerated(value = EnumType.STRING)
+    private Mechanic mechanic;
+    @Enumerated(value = EnumType.STRING)
+    private Equipment equipment;
+    @Enumerated(value = EnumType.STRING)
+    private PrimaryMuscle primaryMuscles;
     private String description;
-    private String category;
-    private String secondaryMuscles;
+    @Enumerated(value = EnumType.STRING)
+    private Category category;
+
+    @OneToOne(mappedBy = "exercise")
+    private WorkoutExercise workoutExercise;
 }
