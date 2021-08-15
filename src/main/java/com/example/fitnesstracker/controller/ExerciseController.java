@@ -1,7 +1,6 @@
 package com.example.fitnesstracker.controller;
 
 import com.example.fitnesstracker.domain.exercise.dto.ExerciseDto;
-import com.example.fitnesstracker.domain.user.entity.User;
 import com.example.fitnesstracker.service.exercise.ExerciseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
