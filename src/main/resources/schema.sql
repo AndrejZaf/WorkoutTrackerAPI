@@ -71,11 +71,24 @@ CREATE TABLE IF NOT EXISTS `spring`.`workout_exercise` (
     `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `deleted_on` datetime DEFAULT NULL,
     `uid` varchar(255) DEFAULT NULL,
-    `reps` int(11) NOT NULL,
-    `rest_period` int(11) NOT NULL,
     `exercise_id` bigint(20) DEFAULT NULL,
     `workout_id` bigint(20) NOT NULL,
     PRIMARY KEY (`id`),
     KEY `FKalytxvdcpsg2e2oo8ihk55dm2` (`exercise_id`),
     KEY `FKqultuq4g6w47iqdaf0vb8ff3j` (`workout_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+
+CREATE TABLE IF NOT EXISTS `spring`.`exercise_set` (
+    `id` bigint(20) NOT NULL AUTO_INCREMENT,
+    `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `deleted_on` datetime DEFAULT NULL,
+    `uid` varchar(255) DEFAULT NULL,
+    `reps` int(11) DEFAULT NULL,
+    `rest_period` int(11) DEFAULT NULL,
+    `weight` double DEFAULT NULL,
+    `workout_exercise_id` bigint(20) DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    KEY `FKqlgkoty8qo2c1wyj821nrr1b4` (`workout_exercise_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
