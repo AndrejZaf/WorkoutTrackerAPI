@@ -97,7 +97,8 @@ public class UserController {
         return new ResponseEntity<>(null, HttpStatus.CREATED);
     }
 
-    @PostMapping("/token/refresh")
+    // Not sure if this is the correct way to go
+    @GetMapping("/token/refresh")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
         if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
