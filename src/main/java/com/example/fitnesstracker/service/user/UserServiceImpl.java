@@ -5,6 +5,7 @@ import com.example.fitnesstracker.domain.role.exception.RoleNotFoundException;
 import com.example.fitnesstracker.domain.user.dto.*;
 import com.example.fitnesstracker.domain.role.entity.Role;
 import com.example.fitnesstracker.domain.user.entity.User;
+import com.example.fitnesstracker.domain.user.enumeration.MeasurementSystemEnum;
 import com.example.fitnesstracker.domain.user.exception.*;
 import com.example.fitnesstracker.domain.user.mapper.UserMapper;
 import com.example.fitnesstracker.repository.RoleRepository;
@@ -157,4 +158,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), authorities);
     }
 
+    @Override
+    public String updateMeasurementSystem(String email, String measurementSystem) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException());
+        if(measurementSystem.equals(MeasurementSystemEnum.METRIC_SYSTEM.toString())){
+            user.setMeasurementSystem(MeasurementSystemEnum.METRIC_SYSTEM);
+        } else if (measurementSystem.equals(MeasurementSystemEnum.IMPERIAL_SYSTEM.toString())) {
+            user.setMeasurementSystem(MeasurementSystemEnum.IMPERIAL_SYSTEM);
+        }
+        else {
+            // throw error
+        }
+        userRepository.save(user);
+        return user.getMeasurementSystem().toString();
+    }
 }

@@ -43,6 +43,12 @@ public class WorkoutController {
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
+    @GetMapping("/{workoutUid}/{exerciseUid}")
+    ResponseEntity<?> removeExerciseFromWorkout(@PathVariable String workoutUid, @PathVariable String exerciseUid){
+        workoutService.removeExerciseFromWorkout(workoutUid, exerciseUid);
+        return new ResponseEntity<>(null, HttpStatus.OK);
+    }
+
 
     @DeleteMapping("/{uid}")
     ResponseEntity<?> deleteWorkoutByUid(@PathVariable String uid){

@@ -1,6 +1,7 @@
 package com.example.fitnesstracker.service.workout;
 
 import com.example.fitnesstracker.domain.exercise.entity.Exercise;
+import com.example.fitnesstracker.domain.exercise.exception.ExerciseNotFoundException;
 import com.example.fitnesstracker.domain.set.entity.ExerciseSet;
 import com.example.fitnesstracker.domain.set.response.ExerciseSetResponse;
 import com.example.fitnesstracker.domain.user.entity.User;
@@ -30,7 +31,6 @@ public class WorkoutServiceImpl implements WorkoutService {
     private final UserRepository userRepository;
     private final ExerciseSetRepository exerciseSetRepository;
 
-    @Transactional
     @Override
     public String createWorkoutWithExercises(String username, CreateWorkoutDto createWorkoutDto) {
         Workout workout = new Workout();
@@ -44,8 +44,9 @@ public class WorkoutServiceImpl implements WorkoutService {
         workouts.add(workout);
         user.setWorkouts(workouts);
         workout.setUser(user);
-
+        workout.setWorkoutExercises(Collections.emptySet());
         workoutRepository.save(workout);
+
         createWorkoutDto.getExercises().forEach(ex -> {
             Exercise exerciseFromDatabase = exerciseRepository.findByUid(UUID.fromString(ex.getUid()))
                     .orElseThrow(() -> new EntityNotFoundException("Entity not found"));
@@ -102,8 +103,7 @@ public class WorkoutServiceImpl implements WorkoutService {
     @Override
     public List<WorkoutResponse> getWorkoutsForUser(String email) {
         User user = userRepository.findByEmail(email).get();
-        Set<Workout> workouts = user.getWorkouts();
-        return workouts.stream().map(workout -> {
+        return user.getWorkouts().stream().map(workout -> {
             List<WorkoutExerciseResponse> workoutExerciseResponse = workout.getWorkoutExercises().stream().map(workoutExercises -> {
                 List<ExerciseSetResponse> exerciseSetResponse = workoutExercises.getSet().stream().map(exerciseSet ->
                         new ExerciseSetResponse(exerciseSet.getReps(), exerciseSet.getWeight(), exerciseSet.getRestPeriod())).collect(Collectors.toList());
@@ -130,6 +130,17 @@ public class WorkoutServiceImpl implements WorkoutService {
         WorkoutResponse workoutResponse = new WorkoutResponse(workout.getName(), workoutExerciseResponse);
 
         return workoutResponse;
+    }
+
+    @Override
+    public void removeExerciseFromWorkout(String workoutUid, String exerciseUid) {
+        Workout workout = workoutRepository.findByUid(UUID.fromString(workoutUid)).orElseThrow(() -> new EntityNotFoundException("Workout not found"));
+        Set<WorkoutExercise> workoutExercises = workout.getWorkoutExercises();
+        WorkoutExercise wExercise = workoutExercises.stream()
+                .filter(workoutExercise -> workoutExercise.getExercise().getUid().equals(UUID.fromString(exerciseUid)))
+                .findFirst()
+                .orElseThrow(() -> new ExerciseNotFoundException());
+        workoutExerciseRepository.delete(wExercise);
     }
 
     @Override

@@ -14,4 +14,5 @@ public interface UserService {
     UserVerificationEmailDto requestVerificationEmail(UserVerificationEmailDto userVerificationEmailDto);
     UserForgotPasswordEmailDto requestForgotPasswordEmail(UserForgotPasswordEmailDto userForgotPasswordEmailDto);
     UserForgotPasswordDto changeUserPassword(UserForgotPasswordDto userForgotPasswordDto);
+    String updateMeasurementSystem(String email, String measurementSystem);
 }

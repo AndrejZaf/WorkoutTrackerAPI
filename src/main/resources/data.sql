@@ -9,7 +9,7 @@ VALUES(3, 'b74c5290-8970-4eff-8c63-855859765c64', 'ROLE_PLATINUM');
 
 INSERT IGNORE INTO `spring`.`user`
 (`id`, `created_at`, `deleted_on`, `uid`, `email`, `enabled`, `forgot_password_code`, `forgot_password_code_expires_on`, `height`, `measurement_system`, `password`, `verification_code`, `verification_expires_on`, `weight`)
-VALUES(1, CURRENT_DATE, null , 'f5ac187f-1302-407d-89a1-9a761ef777d0', 'andrej.zafirovski@gmail.com', true, '58191137-5070-41d5-a996-56e9e6c354a0', CURRENT_DATE + 3, null , 'IMPERIAL_SYSTEM', '{bcrypt}$2a$10$62BdhZwJNCaUIwgTQnkdO.FZizJrYmeJVTYkUOkJlkqVoyBrpqHhy', '8f0cc255-099d-476e-a69f-6001b9c4b57d', CURRENT_DATE + 3, null );
+VALUES(1, CURRENT_DATE, null , 'f5ac187f-1302-407d-89a1-9a761ef777d0', 'andrej.zafirovski@gmail.com', true, '58191137-5070-41d5-a996-56e9e6c354a0', CURRENT_DATE, null , 'IMPERIAL_SYSTEM', '{bcrypt}$2a$10$62BdhZwJNCaUIwgTQnkdO.FZizJrYmeJVTYkUOkJlkqVoyBrpqHhy', '8f0cc255-099d-476e-a69f-6001b9c4b57d', CURRENT_DATE, null );
 
 INSERT IGNORE INTO `spring`.`user_roles` (`user_id`, `roles_id`)
 VALUES(1, 1);
@@ -3502,4 +3502,14 @@ VALUES ('Zottman Curl', 'Pull', 'Intermediate', 'Isolation', 'Dumbbell', 'Biceps
 INSERT INTO exercise(`name`, `force_type`, `level`, `mechanic`, `equipment`, `primary_muscles`, `description`, `category`)
 VALUES ('Zottman Preacher Curl', 'Pull', 'Intermediate', 'Isolation', 'Dumbbell', 'Biceps', 'Grab a dumbbell in each hand and place your upper arms on top of the preacher bench or the incline bench. The dumbbells should be held at shoulder height and the elbows should be flexed. Hold the dumbbells with the palms of your hands facing down. This will be your starting position. As you breathe in, slowly lower the dumbbells keeping the palms down until your upper arm is extended and your biceps are fully stretched. Now rotate your wrists once you are at the bottom of the movement so that the palms of the hands are facing up. As you exhale, use your biceps to curl the weights up until they are fully contracted and the dumbbells are at shoulder height. Again, remember that to ensure full contraction you need to bring that small finger higher than the thumb. Squeeze the biceps hard for a second at the contracted position and rotate your wrists so that the palms are facing down again. Repeat for the recommended amount of repetitions.', 'Strength');
 
-UPDATE `spring`.`exercise` SET uid = (UUID()) WHERE uid IS NULL;
+UPDATE `spring`.`exercise` SET uid = (LOWER(CONCAT(
+        LPAD(HEX(FLOOR(RAND() * 0xffff)), 4, '0'),
+        LPAD(HEX(FLOOR(RAND() * 0xffff)), 4, '0'), '-',
+        LPAD(HEX(FLOOR(RAND() * 0xffff)), 4, '0'), '-',
+        '4',
+        LPAD(HEX(FLOOR(RAND() * 0x0fff)), 3, '0'), '-',
+        HEX(FLOOR(RAND() * 4 + 8)),
+        LPAD(HEX(FLOOR(RAND() * 0x0fff)), 3, '0'), '-',
+        LPAD(HEX(FLOOR(RAND() * 0xffff)), 4, '0'),
+        LPAD(HEX(FLOOR(RAND() * 0xffff)), 4, '0'),
+        LPAD(HEX(FLOOR(RAND() * 0xffff)), 4, '0')))) WHERE uid IS NULL;

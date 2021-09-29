@@ -22,7 +22,7 @@ public class WorkoutExercise extends BaseEntity {
     @JoinColumn(name="workout_id", nullable = false)
     private Workout workout;
 
-    @OneToOne
-    @JoinColumn(name ="exercise_id", referencedColumnName = "id")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name ="exercise_id")
     private Exercise exercise;
 }

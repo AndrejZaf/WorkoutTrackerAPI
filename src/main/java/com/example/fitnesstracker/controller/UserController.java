@@ -9,10 +9,7 @@ import com.example.fitnesstracker.domain.user.dto.*;
 import com.example.fitnesstracker.domain.role.entity.Role;
 import com.example.fitnesstracker.domain.user.entity.User;
 import com.example.fitnesstracker.domain.user.mapper.UserMapper;
-import com.example.fitnesstracker.domain.user.request.UserForgotPasswordEmailRequest;
-import com.example.fitnesstracker.domain.user.request.UserForgotPasswordRequest;
-import com.example.fitnesstracker.domain.user.request.UserRegistrationRequest;
-import com.example.fitnesstracker.domain.user.request.UserVerificationEmailRequest;
+import com.example.fitnesstracker.domain.user.request.*;
 import com.example.fitnesstracker.domain.user.response.*;
 import com.example.fitnesstracker.service.role.RoleService;
 import com.example.fitnesstracker.service.user.UserService;
@@ -25,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.security.Principal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -133,5 +131,11 @@ public class UserController {
         } else {
             throw new RuntimeException("Refresh token is missing");
         }
+    }
+
+    @PostMapping("/measurement")
+    public ResponseEntity<ChangeMeasurementSystemResponse> saveRoleToUser(Principal principal, @RequestBody ChangeMeasurementSystemRequest request){
+        String measurementSystem = userService.updateMeasurementSystem(principal.getName(), request.getMeasurementSystem());
+        return new ResponseEntity<>(new ChangeMeasurementSystemResponse(measurementSystem), HttpStatus.OK);
     }
 }
