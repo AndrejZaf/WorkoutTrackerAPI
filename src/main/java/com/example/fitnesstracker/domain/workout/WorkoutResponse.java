@@ -11,6 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 public class WorkoutResponse {
     String name;
+    String uid;
     @JsonProperty("exercises")
     List<WorkoutExerciseResponse> workoutExerciseResponse;
 }

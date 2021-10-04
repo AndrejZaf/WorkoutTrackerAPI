@@ -37,6 +37,12 @@ public class WorkoutController {
         return new ResponseEntity<>(workoutResponse, HttpStatus.OK);
     }
 
+    @PutMapping("/{workoutUid}")
+    ResponseEntity<?> updateWorkoutByUid(@PathVariable String workoutUid, @RequestBody CreateWorkoutDto createWorkoutDto){
+        workoutService.updateWorkout(workoutUid, createWorkoutDto);
+        return new ResponseEntity<>(null, HttpStatus.OK);
+    }
+
     @PostMapping("/{uid}")
     ResponseEntity<?> addExerciseToWorkout(@PathVariable String uid, @RequestBody ExerciseToExistingWorkoutDto exerciseToExistingWorkoutDto){
         workoutService.addExerciseToExistingWorkout(uid, exerciseToExistingWorkoutDto);

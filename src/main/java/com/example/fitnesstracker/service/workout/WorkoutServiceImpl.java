@@ -111,7 +111,7 @@ public class WorkoutServiceImpl implements WorkoutService {
                 return new WorkoutExerciseResponse(workoutExercises.getExercise().getUid().toString(), exerciseSetResponse);
             }).collect(Collectors.toList());
 
-            WorkoutResponse response = new WorkoutResponse(workout.getName(), workoutExerciseResponse);
+            WorkoutResponse response = new WorkoutResponse(workout.getName(), workout.getUid().toString(), workoutExerciseResponse);
             return response;
         }).collect(Collectors.toList());
     }
@@ -127,7 +127,7 @@ public class WorkoutServiceImpl implements WorkoutService {
             return new WorkoutExerciseResponse(workoutExercises.getExercise().getUid().toString(), exerciseSetResponse);
         }).collect(Collectors.toList());
 
-        WorkoutResponse workoutResponse = new WorkoutResponse(workout.getName(), workoutExerciseResponse);
+        WorkoutResponse workoutResponse = new WorkoutResponse(workout.getName(), workout.getUid().toString(), workoutExerciseResponse);
 
         return workoutResponse;
     }
@@ -146,5 +146,48 @@ public class WorkoutServiceImpl implements WorkoutService {
     @Override
     public void deleteWorkoutByUid(String uid) {
         workoutRepository.delete(workoutRepository.findByUid(UUID.fromString(uid)).orElseThrow(() -> new EntityNotFoundException("Workout not found")));
+    }
+
+    @Override
+    public void updateWorkout(String workoutUid, CreateWorkoutDto createWorkoutDto) {
+        Workout workout = workoutRepository.findByUid(UUID.fromString(workoutUid)).orElseThrow(() -> new EntityNotFoundException("Workout not found"));
+        workout.setName(createWorkoutDto.getName());
+        Set<WorkoutExercise> workoutExercises = workout.getWorkoutExercises();
+        Set<ExerciseSet> exerciseSets = new HashSet<>();
+
+        workoutExercises.forEach(workoutExercise -> {
+            exerciseSetRepository.deleteAllInBatch(workoutExercise.getSet());
+        });
+        workoutExerciseRepository.deleteAllInBatch(workoutExercises);
+
+        workout.setWorkoutExercises(Collections.emptySet());
+        workoutRepository.save(workout);
+
+        createWorkoutDto.getExercises().forEach(ex -> {
+            Exercise exerciseFromDatabase = exerciseRepository.findByUid(UUID.fromString(ex.getUid()))
+                    .orElseThrow(() -> new EntityNotFoundException("Entity not found"));
+            WorkoutExercise workoutExercise = new WorkoutExercise();
+            workoutExercise.setExercise(exerciseFromDatabase);
+            workoutExercise.setWorkout(workout);
+            workoutExercise.setUid(UUID.randomUUID());
+
+            workoutExerciseRepository.save(workoutExercise);
+            workoutExercises.add(workoutExercise);
+            ex.getSets().forEach(set -> {
+                ExerciseSet exerciseSet = new ExerciseSet();
+                exerciseSet.setUid(UUID.randomUUID());
+                exerciseSet.setRestPeriod(set.getRestPeriod());
+                exerciseSet.setReps(set.getReps());
+                exerciseSet.setWeight(set.getWeight());
+                exerciseSet.setWorkoutExercise(workoutExercise);
+                exerciseSetRepository.save(exerciseSet);
+                exerciseSets.add(exerciseSet);
+            });
+            workoutExercise.setSet(exerciseSets);
+            workoutExerciseRepository.save(workoutExercise);
+        });
+
+        workout.setWorkoutExercises(workoutExercises);
+        workoutRepository.save(workout);
     }
 }

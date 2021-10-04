@@ -13,4 +13,5 @@ public interface WorkoutService {
     WorkoutResponse getWorkoutByUid(String uid);
     void removeExerciseFromWorkout(String workoutUid, String exerciseUid);
     void deleteWorkoutByUid(String uid);
+    void updateWorkout(String workoutUid, CreateWorkoutDto createWorkoutDto);
 }
