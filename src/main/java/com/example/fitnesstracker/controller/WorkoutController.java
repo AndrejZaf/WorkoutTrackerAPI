@@ -3,6 +3,7 @@ package com.example.fitnesstracker.controller;
 import com.example.fitnesstracker.domain.workout.WorkoutResponse;
 import com.example.fitnesstracker.domain.workout.dto.CreateWorkoutDto;
 import com.example.fitnesstracker.domain.workout.dto.ExerciseToExistingWorkoutDto;
+import com.example.fitnesstracker.domain.workout.response.CreateWorkoutResponse;
 import com.example.fitnesstracker.service.workout.WorkoutService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,9 +27,9 @@ public class WorkoutController {
     }
 
     @PostMapping
-    ResponseEntity<?> createWorkout(Principal principal, @RequestBody CreateWorkoutDto createWorkoutDto){
+    ResponseEntity<CreateWorkoutResponse> createWorkout(Principal principal, @RequestBody CreateWorkoutDto createWorkoutDto){
         String workoutUid = workoutService.createWorkoutWithExercises(principal.getName(), createWorkoutDto);
-        return new ResponseEntity<>(workoutUid, HttpStatus.CREATED);
+        return new ResponseEntity<>(new CreateWorkoutResponse(workoutUid), HttpStatus.CREATED);
     }
 
     @GetMapping("/{uid}")
