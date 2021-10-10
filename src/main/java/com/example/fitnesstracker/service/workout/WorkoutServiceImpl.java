@@ -145,7 +145,14 @@ public class WorkoutServiceImpl implements WorkoutService {
 
     @Override
     public void deleteWorkoutByUid(String uid) {
-        workoutRepository.delete(workoutRepository.findByUid(UUID.fromString(uid)).orElseThrow(() -> new EntityNotFoundException("Workout not found")));
+        Workout workout = workoutRepository.findByUid(UUID.fromString(uid)).orElseThrow(() -> new EntityNotFoundException("Workout not found"));
+        workout.getWorkoutExercises().forEach(workoutExercise -> {
+            workoutExercise.getSet().forEach(setExercise -> {
+                exerciseSetRepository.delete(setExercise);
+            });
+            workoutExerciseRepository.delete(workoutExercise);
+        });
+        workoutRepository.delete(workout);
     }
 
     @Override
