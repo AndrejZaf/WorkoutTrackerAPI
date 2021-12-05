@@ -21,6 +21,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User extends BaseEntity {
+
     @NotNull
     private String email;
 
@@ -37,6 +38,7 @@ public class User extends BaseEntity {
     @Column(columnDefinition = "VARCHAR(255)")
     @Type(type = "uuid-char")
     private UUID verificationCode;
+
     @NotNull
     private LocalDateTime verificationExpiresOn;
 
@@ -44,6 +46,7 @@ public class User extends BaseEntity {
     @Column(columnDefinition = "VARCHAR(255)")
     @Type(type = "uuid-char")
     private UUID forgotPasswordCode;
+
     @NotNull
     private LocalDateTime forgotPasswordCodeExpiresOn;
 

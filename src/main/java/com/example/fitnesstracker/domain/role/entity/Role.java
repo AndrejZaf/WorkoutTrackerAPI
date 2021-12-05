@@ -13,6 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Role extends BaseEntity {
+
     @NotNull
     private String name;
 }

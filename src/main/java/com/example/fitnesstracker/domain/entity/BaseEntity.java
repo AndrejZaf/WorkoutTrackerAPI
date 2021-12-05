@@ -14,13 +14,16 @@ import java.util.UUID;
 @Data
 @EntityListeners(AuditingEntityListener.class)
 public class BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @NotNull
     @Column(columnDefinition = "VARCHAR(255)")
     @Type(type = "uuid-char")
     private UUID uid = UUID.randomUUID();
+
     @CreatedDate
     @Column(columnDefinition = "TIMESTAMP", nullable = false)
     private LocalDateTime createdAt;

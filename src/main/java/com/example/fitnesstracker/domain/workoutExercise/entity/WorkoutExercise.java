@@ -10,11 +10,11 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Getter
-@Setter
 @AllArgsConstructor
 @RequiredArgsConstructor
+@Data
 public class WorkoutExercise extends BaseEntity {
+
     @OneToMany(mappedBy = "workoutExercise")
     private Set<ExerciseSet> set;
 

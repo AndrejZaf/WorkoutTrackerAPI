@@ -5,6 +5,7 @@ import com.example.fitnesstracker.domain.workout.dto.CreateWorkoutDto;
 import com.example.fitnesstracker.domain.workout.dto.ExerciseToExistingWorkoutDto;
 import com.example.fitnesstracker.domain.workout.response.CreateWorkoutResponse;
 import com.example.fitnesstracker.service.workout.WorkoutService;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,14 +16,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("${spring.data.rest.base-path}/workout")
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class WorkoutController {
+
     private final WorkoutService workoutService;
 
     @GetMapping
     ResponseEntity<List<WorkoutResponse>> getWorkoutsPerUser(Principal principal){
-        // TODO (1): Implement the workouts per user and prepare for clean up so far because the code is getting big
-        // TODO (2): REMEMBER ABOUT DEFENSIVE CODING
         return new ResponseEntity<>(workoutService.getWorkoutsForUser(principal.getName()), HttpStatus.OK);
     }
 

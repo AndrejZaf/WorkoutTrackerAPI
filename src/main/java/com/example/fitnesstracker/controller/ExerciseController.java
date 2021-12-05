@@ -2,6 +2,7 @@ package com.example.fitnesstracker.controller;
 
 import com.example.fitnesstracker.domain.exercise.dto.ExerciseDto;
 import com.example.fitnesstracker.service.exercise.ExerciseService;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,13 +15,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("${spring.data.rest.base-path}/exercise")
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class ExerciseController {
+
     private final ExerciseService exerciseService;
 
     @GetMapping
     public ResponseEntity<List<ExerciseDto>> getExercises() {
-
         return new ResponseEntity<>(exerciseService.getExercises(), HttpStatus.OK);
     }
 

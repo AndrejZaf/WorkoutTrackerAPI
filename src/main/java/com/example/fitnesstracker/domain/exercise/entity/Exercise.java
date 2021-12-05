@@ -14,18 +14,26 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Exercise extends BaseEntity {
+
     private String name;
+
     @Enumerated(value = EnumType.STRING)
     private Force forceType;
+
     @Enumerated(value = EnumType.STRING)
     private Level level;
+
     @Enumerated(value = EnumType.STRING)
     private Mechanic mechanic;
+
     @Enumerated(value = EnumType.STRING)
     private Equipment equipment;
+
     @Enumerated(value = EnumType.STRING)
     private PrimaryMuscle primaryMuscles;
+
     private String description;
+
     @Enumerated(value = EnumType.STRING)
     private Category category;
 }

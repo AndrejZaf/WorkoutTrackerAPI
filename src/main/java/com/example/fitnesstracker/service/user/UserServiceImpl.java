@@ -12,6 +12,7 @@ import com.example.fitnesstracker.repository.RoleRepository;
 import com.example.fitnesstracker.repository.UserRepository;
 import com.example.fitnesstracker.service.email.EmailService;
 import com.example.fitnesstracker.service.email.EmailUtil;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -24,19 +25,17 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
+@AllArgsConstructor
 @Slf4j
 public class UserServiceImpl implements UserService, UserDetailsService {
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private RoleRepository roleRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private EmailService emailService;
+    private final RoleRepository roleRepository;
+
+    private final EmailService emailService;
 
     @Override
     public UserRegistrationDto saveUser(UserRegistrationDto userRegistrationDto) {
@@ -48,7 +47,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         User user = UserMapper.INSTANCE.userRegistrationDtoToUser(userRegistrationDto);
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        Role role = roleRepository.findByName(RoleEnum.ROLE_BRONZE.name()).orElseThrow(() ->  new RoleNotFoundException());
+        Role role = roleRepository.findByName(RoleEnum.ROLE_BRONZE.name()).orElseThrow(RoleNotFoundException::new);
         user.setRoles(Set.of(role));
         user.setCreatedAt(LocalDateTime.now());
         user.setUid(UUID.randomUUID());
@@ -68,15 +67,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public void addRoleToUser(String email, String rolename) {
         log.info("Adding role {} to user {}", rolename, email);
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException());
-        Role role = roleRepository.findByName(rolename).orElseThrow(() -> new RoleNotFoundException());
+        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        Role role = roleRepository.findByName(rolename).orElseThrow(RoleNotFoundException::new);
         user.getRoles().add(role);
     }
 
     @Override
     public User getUser(String username) {
         log.info("Fetching user {}", username);
-        return userRepository.findByEmail(username).orElseThrow(() -> new UserNotFoundException());
+        return userRepository.findByEmail(username).orElseThrow(UserNotFoundException::new);
     }
 
     @Override
@@ -106,7 +105,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserVerificationEmailDto requestVerificationEmail(UserVerificationEmailDto userVerificationEmailDto) {
-        User user = userRepository.findByEmail(userVerificationEmailDto.getEmail()).orElseThrow(() -> new UserNotFoundException());
+        User user = userRepository.findByEmail(userVerificationEmailDto.getEmail()).orElseThrow(UserNotFoundException::new);
         UUID newUid = UUID.randomUUID();
         user.setVerificationCode(newUid);
         user.setVerificationExpiresOn(LocalDateTime.now().plusDays(10));
@@ -120,7 +119,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserForgotPasswordEmailDto requestForgotPasswordEmail(UserForgotPasswordEmailDto userForgotPasswordEmailDto) {
-        User user = userRepository.findByEmail(userForgotPasswordEmailDto.getEmail()).orElseThrow(() -> new UserNotFoundException());
+        User user = userRepository.findByEmail(userForgotPasswordEmailDto.getEmail()).orElseThrow(UserNotFoundException::new);
         UUID newUid = UUID.randomUUID();
         user.setForgotPasswordCode(newUid);
         user.setForgotPasswordCodeExpiresOn(LocalDateTime.now().plusDays(10));
@@ -134,7 +133,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserForgotPasswordDto changeUserPassword(UserForgotPasswordDto userForgotPasswordDto) {
-        User user = userRepository.findByForgotPasswordCode(UUID.fromString(userForgotPasswordDto.getCode())).orElseThrow(() -> new UserNotFoundException());
+        User user = userRepository.findByForgotPasswordCode(UUID.fromString(userForgotPasswordDto.getCode())).orElseThrow(UserNotFoundException::new);
         UUID newUid = UUID.randomUUID();
         user.setForgotPasswordCode(newUid);
         user.setForgotPasswordCodeExpiresOn(LocalDateTime.now().plusDays(10));
@@ -145,7 +144,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) {
-        User user = userRepository.findByEmail(username).orElseThrow(() -> new UserNotFoundException());
+        User user = userRepository.findByEmail(username).orElseThrow(UserNotFoundException::new);
         if(!user.isEnabled()){
             throw new UserNotVerifiedException();
         }
@@ -160,7 +159,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public String updateMeasurementSystem(String email, String measurementSystem) {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException());
+        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
         if(measurementSystem.equals(MeasurementSystemEnum.METRIC_SYSTEM.toString())){
             user.setMeasurementSystem(MeasurementSystemEnum.METRIC_SYSTEM);
         } else if (measurementSystem.equals(MeasurementSystemEnum.IMPERIAL_SYSTEM.toString())) {

@@ -13,22 +13,25 @@ import com.example.fitnesstracker.domain.workout.entity.Workout;
 import com.example.fitnesstracker.domain.workoutExercise.entity.WorkoutExercise;
 import com.example.fitnesstracker.domain.workoutExercise.response.WorkoutExerciseResponse;
 import com.example.fitnesstracker.repository.*;
-import lombok.RequiredArgsConstructor;
-import org.hibernate.jdbc.Work;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
-import javax.transaction.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class WorkoutServiceImpl implements WorkoutService {
+
     private final WorkoutRepository workoutRepository;
+
     private final ExerciseRepository exerciseRepository;
+
     private final WorkoutExerciseRepository workoutExerciseRepository;
+
     private final UserRepository userRepository;
+
     private final ExerciseSetRepository exerciseSetRepository;
 
     @Override
@@ -38,41 +41,13 @@ public class WorkoutServiceImpl implements WorkoutService {
 
         Set<WorkoutExercise> workoutExercises = new HashSet<>();
         Set<ExerciseSet> exerciseSets = new HashSet<>();
-        User user = userRepository.findByEmail(username).orElseThrow(() -> new UserNotFoundException());
+        User user = userRepository.findByEmail(username).orElseThrow(UserNotFoundException::new);
 
         Set<Workout> workouts = user.getWorkouts();
         workouts.add(workout);
         user.setWorkouts(workouts);
         workout.setUser(user);
-        workout.setWorkoutExercises(Collections.emptySet());
-        workoutRepository.save(workout);
-
-        createWorkoutDto.getExercises().forEach(ex -> {
-            Exercise exerciseFromDatabase = exerciseRepository.findByUid(UUID.fromString(ex.getUid()))
-                    .orElseThrow(() -> new EntityNotFoundException("Entity not found"));
-            WorkoutExercise workoutExercise = new WorkoutExercise();
-            workoutExercise.setExercise(exerciseFromDatabase);
-            workoutExercise.setWorkout(workout);
-            workoutExercise.setUid(UUID.randomUUID());
-
-            workoutExerciseRepository.save(workoutExercise);
-            workoutExercises.add(workoutExercise);
-            ex.getSets().forEach(set -> {
-                ExerciseSet exerciseSet = new ExerciseSet();
-                exerciseSet.setUid(UUID.randomUUID());
-                exerciseSet.setRestPeriod(set.getRestPeriod());
-                exerciseSet.setReps(set.getReps());
-                exerciseSet.setWeight(set.getWeight());
-                exerciseSet.setWorkoutExercise(workoutExercise);
-                exerciseSetRepository.save(exerciseSet);
-                exerciseSets.add(exerciseSet);
-            });
-            workoutExercise.setSet(exerciseSets);
-            workoutExerciseRepository.save(workoutExercise);
-        });
-
-        workout.setWorkoutExercises(workoutExercises);
-        workoutRepository.save(workout);
+        createWorkout(createWorkoutDto, workout, workoutExercises, exerciseSets);
         userRepository.save(user);
 
         return workout.getUid().toString();
@@ -80,7 +55,7 @@ public class WorkoutServiceImpl implements WorkoutService {
 
     @Override
     public String addExerciseToExistingWorkout(String uid, ExerciseToExistingWorkoutDto exerciseToExistingWorkoutDto) {
-        Workout workout = workoutRepository.findByUid(UUID.fromString(uid)).orElseThrow(() -> new EntityNotFoundException());
+        Workout workout = workoutRepository.findByUid(UUID.fromString(uid)).orElseThrow(EntityNotFoundException::new);
 
         Set<WorkoutExercise> workoutExercises = workout.getWorkoutExercises();
 
@@ -102,34 +77,18 @@ public class WorkoutServiceImpl implements WorkoutService {
 
     @Override
     public List<WorkoutResponse> getWorkoutsForUser(String email) {
-        User user = userRepository.findByEmail(email).get();
-        return user.getWorkouts().stream().map(workout -> {
-            List<WorkoutExerciseResponse> workoutExerciseResponse = workout.getWorkoutExercises().stream().map(workoutExercises -> {
-                List<ExerciseSetResponse> exerciseSetResponse = workoutExercises.getSet().stream().map(exerciseSet ->
-                        new ExerciseSetResponse(exerciseSet.getReps(), exerciseSet.getWeight(), exerciseSet.getRestPeriod())).collect(Collectors.toList());
-
-                return new WorkoutExerciseResponse(workoutExercises.getExercise().getUid().toString(), exerciseSetResponse);
-            }).collect(Collectors.toList());
-
-            WorkoutResponse response = new WorkoutResponse(workout.getName(), workout.getUid().toString(), workoutExerciseResponse);
-            return response;
-        }).collect(Collectors.toList());
+        Optional<User> user = userRepository.findByEmail(email);
+        if(user.isPresent()) {
+            return user.get().getWorkouts().stream().map(this::getWorkoutExercises).collect(Collectors.toList());
+        }
+        throw new UserNotFoundException();
     }
 
 
     @Override
     public WorkoutResponse getWorkoutByUid(String uid) {
         Workout workout = workoutRepository.findByUid(UUID.fromString(uid)).orElseThrow(() -> new EntityNotFoundException("Workout not found"));
-        List<WorkoutExerciseResponse> workoutExerciseResponse = workout.getWorkoutExercises().stream().map(workoutExercises -> {
-            List<ExerciseSetResponse> exerciseSetResponse = workoutExercises.getSet().stream().map(exerciseSet ->
-                    new ExerciseSetResponse(exerciseSet.getReps(), exerciseSet.getWeight(), exerciseSet.getRestPeriod())).collect(Collectors.toList());
-
-            return new WorkoutExerciseResponse(workoutExercises.getExercise().getUid().toString(), exerciseSetResponse);
-        }).collect(Collectors.toList());
-
-        WorkoutResponse workoutResponse = new WorkoutResponse(workout.getName(), workout.getUid().toString(), workoutExerciseResponse);
-
-        return workoutResponse;
+        return getWorkoutExercises(workout);
     }
 
     @Override
@@ -139,7 +98,7 @@ public class WorkoutServiceImpl implements WorkoutService {
         WorkoutExercise wExercise = workoutExercises.stream()
                 .filter(workoutExercise -> workoutExercise.getExercise().getUid().equals(UUID.fromString(exerciseUid)))
                 .findFirst()
-                .orElseThrow(() -> new ExerciseNotFoundException());
+                .orElseThrow(ExerciseNotFoundException::new);
         workoutExerciseRepository.delete(wExercise);
     }
 
@@ -147,9 +106,7 @@ public class WorkoutServiceImpl implements WorkoutService {
     public void deleteWorkoutByUid(String uid) {
         Workout workout = workoutRepository.findByUid(UUID.fromString(uid)).orElseThrow(() -> new EntityNotFoundException("Workout not found"));
         workout.getWorkoutExercises().forEach(workoutExercise -> {
-            workoutExercise.getSet().forEach(setExercise -> {
-                exerciseSetRepository.delete(setExercise);
-            });
+            workoutExercise.getSet().forEach(exerciseSetRepository::delete);
             workoutExerciseRepository.delete(workoutExercise);
         });
         workoutRepository.delete(workout);
@@ -167,6 +124,21 @@ public class WorkoutServiceImpl implements WorkoutService {
         });
         workoutExerciseRepository.deleteAllInBatch(workoutExercises);
 
+        createWorkout(createWorkoutDto, workout, workoutExercises, exerciseSets);
+    }
+
+    private WorkoutResponse getWorkoutExercises(Workout workout) {
+        List<WorkoutExerciseResponse> workoutExerciseResponse = workout.getWorkoutExercises().stream().map(workoutExercises -> {
+            List<ExerciseSetResponse> exerciseSetResponse = workoutExercises.getSet().stream().map(exerciseSet ->
+                    new ExerciseSetResponse(exerciseSet.getReps(), exerciseSet.getWeight(), exerciseSet.getRestPeriod())).collect(Collectors.toList());
+
+            return new WorkoutExerciseResponse(workoutExercises.getExercise().getUid().toString(), exerciseSetResponse);
+        }).collect(Collectors.toList());
+
+        return new WorkoutResponse(workout.getName(), workout.getUid().toString(), workoutExerciseResponse);
+    }
+
+    private void createWorkout(CreateWorkoutDto createWorkoutDto, Workout workout, Set<WorkoutExercise> workoutExercises, Set<ExerciseSet> exerciseSets) {
         workout.setWorkoutExercises(Collections.emptySet());
         workoutRepository.save(workout);
 

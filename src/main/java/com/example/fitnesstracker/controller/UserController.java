@@ -14,7 +14,7 @@ import com.example.fitnesstracker.domain.user.response.*;
 import com.example.fitnesstracker.service.role.RoleService;
 import com.example.fitnesstracker.service.user.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,16 +26,17 @@ import java.security.Principal;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static java.util.Arrays.stream;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping("${spring.data.rest.base-path}/user")
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class UserController {
+
     private final UserService userService;
+
     private final RoleService roleService;
 
     @GetMapping

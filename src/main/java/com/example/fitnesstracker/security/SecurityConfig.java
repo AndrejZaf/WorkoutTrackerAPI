@@ -2,7 +2,7 @@ package com.example.fitnesstracker.security;
 
 import com.example.fitnesstracker.security.filter.CustomAuthenticationFilter;
 import com.example.fitnesstracker.security.filter.CustomAuthorizationFilter;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -24,8 +24,9 @@ import java.util.Map;
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
     private final UserDetailsService userDetailsService;
 
     @Override

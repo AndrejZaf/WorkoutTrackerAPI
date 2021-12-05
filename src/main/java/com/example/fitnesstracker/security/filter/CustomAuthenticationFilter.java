@@ -5,7 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.example.fitnesstracker.domain.user.exception.UserNotFoundException;
 import com.example.fitnesstracker.domain.user.exception.UserNotVerifiedException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,8 +30,9 @@ import java.util.stream.Collectors;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Slf4j
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+
     private final AuthenticationManager authenticationManager;
 
     @Override

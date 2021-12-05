@@ -9,12 +9,13 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Workout extends BaseEntity {
+
     private String name;
+
     @ManyToOne
     @JoinColumn(name="user_id", nullable = false)
     private User user;

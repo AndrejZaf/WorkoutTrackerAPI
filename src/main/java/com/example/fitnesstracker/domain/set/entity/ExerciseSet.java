@@ -9,14 +9,16 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 @Entity
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @Builder
 @RequiredArgsConstructor
 public class ExerciseSet extends BaseEntity {
+
     private Integer reps;
+
     private Double weight;
+
     private Integer restPeriod;
 
     @ManyToOne
