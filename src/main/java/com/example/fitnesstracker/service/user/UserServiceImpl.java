@@ -25,17 +25,20 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
-@AllArgsConstructor
 @Slf4j
 public class UserServiceImpl implements UserService, UserDetailsService {
 
-    private final PasswordEncoder passwordEncoder;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-    private final UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-    private final RoleRepository roleRepository;
+    @Autowired
+    private RoleRepository roleRepository;
 
-    private final EmailService emailService;
+    @Autowired
+    private EmailService emailService;
 
     @Override
     public UserRegistrationDto saveUser(UserRegistrationDto userRegistrationDto) {

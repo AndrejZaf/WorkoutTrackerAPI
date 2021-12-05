@@ -3,6 +3,7 @@ package com.example.fitnesstracker.security;
 import com.example.fitnesstracker.security.filter.CustomAuthenticationFilter;
 import com.example.fitnesstracker.security.filter.CustomAuthorizationFilter;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
