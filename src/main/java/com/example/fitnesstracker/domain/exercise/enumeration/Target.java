@@ -1,20 +1,29 @@
 package com.example.fitnesstracker.domain.exercise.enumeration;
 
-public enum PrimaryMuscle {
-    Abdominals,
-    Hamstrings,
-    Adductors,
-    Quadriceps,
-    Biceps,
-    Shoulders,
-    Chest,
-    Middle_Back,
-    Calves,
-    Lower_Back,
-    Lats,
-    Triceps,
-    Glutes,
-    Traps,
-    Forearms,
-    Neck
+public enum Target {
+    GLUTES("Glutes"),
+    ABDUCTORS("Abductors"),
+    SERRATUS_ANTERIOR("Serratus Anterior"),
+    LEVATOR_SCAPULAE("Levator Scapulae"),
+    TRICEPS("Triceps"),
+    LATS("Lats"),
+    BICEPS("Biceps"),
+    CARDIOVASCULAR_SYSTEM("Cardiovascular System"),
+    FOREARMS("Forearms"),
+    PECTORALS("Pectorals"),
+    SPINE("Spine"),
+    HAMSTRINGS("Hamstrings"),
+    ADDUCTORS("Adductors"),
+    DELTS("Delts"),
+    QUADS("Quads"),
+    CALVES("Calves"),
+    ABS("Abs"),
+    TRAPS("Traps"),
+    UPPER_BACK("Upper Back");
+
+    private final String target;
+
+    Target(String target) {
+        this.target = target;
+    }
 }

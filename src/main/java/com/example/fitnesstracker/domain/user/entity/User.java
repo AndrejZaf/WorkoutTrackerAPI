@@ -20,6 +20,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "fitness_user")
 public class User extends BaseEntity {
 
     @NotNull

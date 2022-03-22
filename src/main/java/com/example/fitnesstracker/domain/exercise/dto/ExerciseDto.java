@@ -15,7 +15,7 @@ public class ExerciseDto {
     private Level level;
     private Mechanic mechanic;
     private Equipment equipment;
-    private PrimaryMuscle primaryMuscles;
+    private Target primaryMuscles;
     private String description;
     private Category category;
 }
