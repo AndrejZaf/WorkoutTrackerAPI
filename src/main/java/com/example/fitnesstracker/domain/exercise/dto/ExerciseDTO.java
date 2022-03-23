@@ -7,15 +7,18 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
-public class ExerciseDto {
+public class ExerciseDTO {
+
     private LocalDateTime createdAt;
+
     private UUID uid;
+
     private String name;
-    private Force forceType;
-    private Level level;
-    private Mechanic mechanic;
+
+    private BodyPart bodyPart;
+
+    private Target target;
+
     private Equipment equipment;
-    private Target primaryMuscles;
-    private String description;
-    private Category category;
+
 }

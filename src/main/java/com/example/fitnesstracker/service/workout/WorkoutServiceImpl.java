@@ -3,22 +3,18 @@ package com.example.fitnesstracker.service.workout;
 import com.example.fitnesstracker.domain.exercise.entity.Exercise;
 import com.example.fitnesstracker.domain.exercise.exception.ExerciseNotFoundException;
 import com.example.fitnesstracker.domain.set.entity.ExerciseSet;
-import com.example.fitnesstracker.domain.set.response.ExerciseSetResponse;
 import com.example.fitnesstracker.domain.user.entity.User;
 import com.example.fitnesstracker.domain.user.exception.UserNotFoundException;
-import com.example.fitnesstracker.domain.workout.WorkoutResponse;
-import com.example.fitnesstracker.domain.workout.dto.CreateWorkoutDto;
-import com.example.fitnesstracker.domain.workout.dto.ExerciseToExistingWorkoutDto;
+import com.example.fitnesstracker.domain.workout.dto.CreateWorkoutDTO;
+import com.example.fitnesstracker.domain.workout.dto.ExerciseToExistingWorkoutDTO;
 import com.example.fitnesstracker.domain.workout.entity.Workout;
 import com.example.fitnesstracker.domain.workoutExercise.entity.WorkoutExercise;
-import com.example.fitnesstracker.domain.workoutExercise.response.WorkoutExerciseResponse;
 import com.example.fitnesstracker.repository.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -35,7 +31,7 @@ public class WorkoutServiceImpl implements WorkoutService {
     private final ExerciseSetRepository exerciseSetRepository;
 
     @Override
-    public String createWorkoutWithExercises(String username, CreateWorkoutDto createWorkoutDto) {
+    public String createWorkoutWithExercises(String username, CreateWorkoutDTO createWorkoutDto) {
         Workout workout = new Workout();
         workout.setName(createWorkoutDto.getName());
 
@@ -54,7 +50,7 @@ public class WorkoutServiceImpl implements WorkoutService {
     }
 
     @Override
-    public String addExerciseToExistingWorkout(String uid, ExerciseToExistingWorkoutDto exerciseToExistingWorkoutDto) {
+    public String addExerciseToExistingWorkout(String uid, ExerciseToExistingWorkoutDTO exerciseToExistingWorkoutDto) {
         Workout workout = workoutRepository.findByUid(UUID.fromString(uid)).orElseThrow(EntityNotFoundException::new);
 
         Set<WorkoutExercise> workoutExercises = workout.getWorkoutExercises();
@@ -76,19 +72,18 @@ public class WorkoutServiceImpl implements WorkoutService {
 
 
     @Override
-    public List<WorkoutResponse> getWorkoutsForUser(String email) {
+    public Set<Workout> getWorkoutsForUser(String email) {
         Optional<User> user = userRepository.findByEmail(email);
         if(user.isPresent()) {
-            return user.get().getWorkouts().stream().map(this::getWorkoutExercises).collect(Collectors.toList());
+            return user.get().getWorkouts();
         }
         throw new UserNotFoundException();
     }
 
 
     @Override
-    public WorkoutResponse getWorkoutByUid(String uid) {
-        Workout workout = workoutRepository.findByUid(UUID.fromString(uid)).orElseThrow(() -> new EntityNotFoundException("Workout not found"));
-        return getWorkoutExercises(workout);
+    public Workout getWorkoutByUid(String uid) {
+        return workoutRepository.findByUid(UUID.fromString(uid)).orElseThrow(() -> new EntityNotFoundException("Workout not found"));
     }
 
     @Override
@@ -113,7 +108,7 @@ public class WorkoutServiceImpl implements WorkoutService {
     }
 
     @Override
-    public void updateWorkout(String workoutUid, CreateWorkoutDto createWorkoutDto) {
+    public void updateWorkout(String workoutUid, CreateWorkoutDTO createWorkoutDto) {
         Workout workout = workoutRepository.findByUid(UUID.fromString(workoutUid)).orElseThrow(() -> new EntityNotFoundException("Workout not found"));
         workout.setName(createWorkoutDto.getName());
         Set<WorkoutExercise> workoutExercises = workout.getWorkoutExercises();
@@ -127,18 +122,7 @@ public class WorkoutServiceImpl implements WorkoutService {
         createWorkout(createWorkoutDto, workout, workoutExercises, exerciseSets);
     }
 
-    private WorkoutResponse getWorkoutExercises(Workout workout) {
-        List<WorkoutExerciseResponse> workoutExerciseResponse = workout.getWorkoutExercises().stream().map(workoutExercises -> {
-            List<ExerciseSetResponse> exerciseSetResponse = workoutExercises.getSet().stream().map(exerciseSet ->
-                    new ExerciseSetResponse(exerciseSet.getReps(), exerciseSet.getWeight(), exerciseSet.getRestPeriod())).collect(Collectors.toList());
-
-            return new WorkoutExerciseResponse(workoutExercises.getExercise().getUid().toString(), exerciseSetResponse);
-        }).collect(Collectors.toList());
-
-        return new WorkoutResponse(workout.getName(), workout.getUid().toString(), workoutExerciseResponse);
-    }
-
-    private void createWorkout(CreateWorkoutDto createWorkoutDto, Workout workout, Set<WorkoutExercise> workoutExercises, Set<ExerciseSet> exerciseSets) {
+    private void createWorkout(CreateWorkoutDTO createWorkoutDto, Workout workout, Set<WorkoutExercise> workoutExercises, Set<ExerciseSet> exerciseSets) {
         workout.setWorkoutExercises(Collections.emptySet());
         workoutRepository.save(workout);
 

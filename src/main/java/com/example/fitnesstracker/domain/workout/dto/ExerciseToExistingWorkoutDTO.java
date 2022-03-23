@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.util.List;
 @Data
-public class ExerciseToExistingWorkoutDto {
-    private List<CreateWorkoutExerciseUidDto> exercises;
+public class ExerciseToExistingWorkoutDTO {
+
+    private List<CreateWorkoutExerciseUidDTO> exercises;
 }

@@ -5,7 +5,9 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class CreateWorkoutDto {
+public class CreateWorkoutDTO {
+
     private String name;
-    private List<CreateWorkoutExerciseUidDto> exercises;
+
+    private List<CreateWorkoutExerciseUidDTO> exercises;
 }

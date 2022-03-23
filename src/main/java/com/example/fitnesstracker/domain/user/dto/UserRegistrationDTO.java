@@ -4,8 +4,11 @@ import com.example.fitnesstracker.domain.user.enumeration.MeasurementSystemEnum;
 import lombok.Data;
 
 @Data
-public class UserRegistrationDto {
+public class UserRegistrationDTO {
+
     private String email;
+
     private String password;
+
     private MeasurementSystemEnum measurementSystem;
 }

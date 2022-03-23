@@ -12,7 +12,7 @@ import com.example.fitnesstracker.repository.RoleRepository;
 import com.example.fitnesstracker.repository.UserRepository;
 import com.example.fitnesstracker.service.email.EmailService;
 import com.example.fitnesstracker.service.email.EmailUtil;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private EmailService emailService;
 
     @Override
-    public UserRegistrationDto saveUser(UserRegistrationDto userRegistrationDto) {
+    public User saveUser(UserRegistrationDTO userRegistrationDto) {
         log.info("Saving new user {} to the database", userRegistrationDto.getEmail());
         if (userRepository.existsByEmail(userRegistrationDto.getEmail())) {
             throw new UserAlreadyExistsException();
@@ -58,13 +58,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setForgotPasswordCodeExpiresOn(LocalDateTime.now().plusDays(10));
         user.setVerificationCode(UUID.randomUUID());
         user.setVerificationExpiresOn(LocalDateTime.now().plusDays(10));
-        userRepository.save(user);
+        user = userRepository.save(user);
 
         String link = String.format("http://localhost:8080/api/user/verify/%s",user.getVerificationCode());
         emailService.sendVerificationEmail(user.getEmail(), EmailUtil.verifyEmail(user.getEmail(), link));
-
-        userRegistrationDto = UserMapper.INSTANCE.userToUserRegistrationDto(user);
-        return userRegistrationDto;
+        return user;
     }
 
     @Override
@@ -87,7 +85,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public UserVerificationDto verifyUser(UserVerificationDto userVerificationDto) {
+    public UserVerificationDTO verifyUser(UserVerificationDTO userVerificationDto) {
         User user = userRepository.findByVerificationCode(UUID.fromString(userVerificationDto.getVerificationCode())).orElseThrow(() -> new UserNotFoundException());
 
         if(user.isEnabled()){
@@ -103,11 +101,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setVerificationExpiresOn(LocalDateTime.now());
 
         userRepository.save(user);
-        return new UserVerificationDto(user.getVerificationCode().toString(), user.getEmail());
+        return new UserVerificationDTO(user.getVerificationCode().toString(), user.getEmail());
     }
 
     @Override
-    public UserVerificationEmailDto requestVerificationEmail(UserVerificationEmailDto userVerificationEmailDto) {
+    public void requestVerificationEmail(UserVerificationEmailDTO userVerificationEmailDto) {
         User user = userRepository.findByEmail(userVerificationEmailDto.getEmail()).orElseThrow(UserNotFoundException::new);
         UUID newUid = UUID.randomUUID();
         user.setVerificationCode(newUid);
@@ -116,12 +114,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
         String link = String.format("http://localhost:8080/api/user/verify/%s", newUid);
         emailService.sendVerificationEmail(user.getEmail(), EmailUtil.verifyEmail(user.getEmail(), link));
-
-        return userVerificationEmailDto;
     }
 
     @Override
-    public UserForgotPasswordEmailDto requestForgotPasswordEmail(UserForgotPasswordEmailDto userForgotPasswordEmailDto) {
+    public void requestForgotPasswordEmail(UserForgotPasswordEmailDTO userForgotPasswordEmailDto) {
         User user = userRepository.findByEmail(userForgotPasswordEmailDto.getEmail()).orElseThrow(UserNotFoundException::new);
         UUID newUid = UUID.randomUUID();
         user.setForgotPasswordCode(newUid);
@@ -130,19 +126,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
         String link = String.format("http://localhost:8080/api/user/reset-password/%s", newUid);
         emailService.sendForgotPasswordEmail(user.getEmail(), EmailUtil.forgotPasswordEmail(user.getEmail(), link));
-
-        return userForgotPasswordEmailDto;
     }
 
     @Override
-    public UserForgotPasswordDto changeUserPassword(UserForgotPasswordDto userForgotPasswordDto) {
+    public void changeUserPassword(UserForgotPasswordDTO userForgotPasswordDto) {
         User user = userRepository.findByForgotPasswordCode(UUID.fromString(userForgotPasswordDto.getCode())).orElseThrow(UserNotFoundException::new);
         UUID newUid = UUID.randomUUID();
         user.setForgotPasswordCode(newUid);
         user.setForgotPasswordCodeExpiresOn(LocalDateTime.now().plusDays(10));
         user.setPassword(passwordEncoder.encode(userForgotPasswordDto.getPassword()));
         userRepository.save(user);
-        return new UserForgotPasswordDto(newUid.toString());
     }
 
     @Override

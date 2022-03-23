@@ -10,11 +10,10 @@ import com.example.fitnesstracker.domain.role.entity.Role;
 import com.example.fitnesstracker.domain.user.entity.User;
 import com.example.fitnesstracker.domain.user.mapper.UserMapper;
 import com.example.fitnesstracker.domain.user.request.*;
-import com.example.fitnesstracker.domain.user.response.*;
 import com.example.fitnesstracker.service.role.RoleService;
 import com.example.fitnesstracker.service.user.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +31,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping("${spring.data.rest.base-path}/user")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
@@ -45,43 +44,36 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserRegistrationResponse> saveUser(@RequestBody UserRegistrationRequest userRequest){
-        UserRegistrationDto userRegistrationDto = UserMapper.INSTANCE.userRegistrationRequestToDto(userRequest);
-        userRegistrationDto = userService.saveUser(userRegistrationDto);
-        UserRegistrationResponse response = UserMapper.INSTANCE.userRegistrationDtoToResponse(userRegistrationDto);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    public ResponseEntity<UserRegistrationDTO> saveUser(@RequestBody UserRegistrationDTO userRegistrationDto){
+        User savedUserDTO = userService.saveUser(userRegistrationDto);
+        UserRegistrationDTO savedUserRegistrationDTO = UserMapper.INSTANCE.userToUserRegistrationDto(savedUserDTO);
+        return new ResponseEntity<>(savedUserRegistrationDTO, HttpStatus.CREATED);
     }
 
     @PostMapping("/verify/{code}")
-    public ResponseEntity<UserVerificationResponse> verifyUser(@PathVariable(value = "code") String code){
-        UserVerificationDto userVerification = new UserVerificationDto(code);
+    public ResponseEntity<UserVerificationDTO> verifyUser(@PathVariable(value = "code") String code){
+        UserVerificationDTO userVerification = new UserVerificationDTO(code);
         userVerification = userService.verifyUser(userVerification);
-        UserVerificationResponse userVerificationResponse = UserMapper.INSTANCE.userVerificationDtoToResponse(userVerification);
-        return new ResponseEntity<>(userVerificationResponse, HttpStatus.OK);
+        return new ResponseEntity<>(userVerification, HttpStatus.OK);
     }
 
     @PostMapping("/verify")
-    public ResponseEntity<UserVerificationEmailResponse> requestVerificationEmail(@RequestBody UserVerificationEmailRequest userEmailRequest){
-        UserVerificationEmailDto userDto = UserMapper.INSTANCE.userVerificationEmailRequestToDto(userEmailRequest);
-        userDto = userService.requestVerificationEmail(userDto);
-        UserVerificationEmailResponse response = UserMapper.INSTANCE.userVerificationDtoToResponse(userDto);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+    public ResponseEntity<?> requestVerificationEmail(@RequestBody UserVerificationEmailDTO userVerificationEmailDto){
+        userService.requestVerificationEmail(userVerificationEmailDto);
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
     @PostMapping("/reset-password/{code}")
-    public ResponseEntity<UserForgotPasswordResponse> forgotPasswordValidation(@PathVariable(value = "code") String code, @RequestBody UserForgotPasswordRequest userForgotPasswordRequest){
-        UserForgotPasswordDto userForgotPasswordDto = new UserForgotPasswordDto(code, userForgotPasswordRequest.getPassword());
-        userForgotPasswordDto = userService.changeUserPassword(userForgotPasswordDto);
-        UserForgotPasswordResponse userForgotPasswordResponse = UserMapper.INSTANCE.userForgotPasswordDtoToResponse(userForgotPasswordDto);
-        return new ResponseEntity<>(userForgotPasswordResponse, HttpStatus.OK);
+    public ResponseEntity<?> forgotPasswordValidation(@PathVariable(value = "code") String code, @RequestBody UserForgotPasswordDTO userForgotPasswordRequestDto){
+        UserForgotPasswordDTO userForgotPasswordDto = new UserForgotPasswordDTO(code, userForgotPasswordRequestDto.getPassword());
+        userService.changeUserPassword(userForgotPasswordDto);
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity<UserForgotPasswordEmailResponse> requestForgotPasswordEmail(@RequestBody UserForgotPasswordEmailRequest userForgotPasswordRequest){
-        UserForgotPasswordEmailDto userForgotPasswordEmailDto = UserMapper.INSTANCE.userForgotPasswordEmailRequestToDto(userForgotPasswordRequest);
-        userForgotPasswordEmailDto = userService.requestForgotPasswordEmail(userForgotPasswordEmailDto);
-        UserForgotPasswordEmailResponse response = UserMapper.INSTANCE.userForgotPasswordEmailDtoToResponse(userForgotPasswordEmailDto);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+    public ResponseEntity<?> requestForgotPasswordEmail(@RequestBody UserForgotPasswordEmailDTO userForgotPasswordRequest){
+        userService.requestForgotPasswordEmail(userForgotPasswordRequest);
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
     @PostMapping("/role/save")
@@ -135,8 +127,8 @@ public class UserController {
     }
 
     @PostMapping("/measurement")
-    public ResponseEntity<ChangeMeasurementSystemResponse> saveRoleToUser(Principal principal, @RequestBody ChangeMeasurementSystemRequest request){
+    public ResponseEntity<ChangeMeasurementSystemDTO> saveRoleToUser(Principal principal, @RequestBody ChangeMeasurementSystemRequest request){
         String measurementSystem = userService.updateMeasurementSystem(principal.getName(), request.getMeasurementSystem());
-        return new ResponseEntity<>(new ChangeMeasurementSystemResponse(measurementSystem), HttpStatus.OK);
+        return new ResponseEntity<>(new ChangeMeasurementSystemDTO(measurementSystem), HttpStatus.OK);
     }
 }

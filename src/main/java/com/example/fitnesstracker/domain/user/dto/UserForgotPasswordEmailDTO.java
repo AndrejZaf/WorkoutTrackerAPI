@@ -3,6 +3,6 @@ package com.example.fitnesstracker.domain.user.dto;
 import lombok.Data;
 
 @Data
-public class UserForgotPasswordEmailDto {
+public class UserForgotPasswordEmailDTO {
     private String email;
 }
