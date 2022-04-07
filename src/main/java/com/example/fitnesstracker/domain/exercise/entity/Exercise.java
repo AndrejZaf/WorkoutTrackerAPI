@@ -16,12 +16,14 @@ public class Exercise extends BaseEntity {
 
     private String name;
 
-    @Enumerated(value = EnumType.STRING)
-    private BodyPart bodyPart;
+//    @Enumerated(value = EnumType.STRING)
+    private String bodyPart;
 
-    @Enumerated(value = EnumType.STRING)
-    private Equipment equipment;
+//    @Enumerated(value = EnumType.STRING)
+    private String equipment;
 
-    @Enumerated(value = EnumType.STRING)
-    private Target target;
+//    @Enumerated(value = EnumType.STRING)
+    private String target;
+
+    private String image;
 }

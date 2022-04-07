@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -69,6 +70,12 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+        if(failed.getMessage().equals("Bad credentials")) {
+            response.setStatus(HttpServletResponse.SC_CONFLICT);
+            PrintWriter out = response.getWriter();
+            out.print("BAD_CREDENTIALS");
+            out.flush();
+        }
 
         if (failed.getCause() instanceof UserNotFoundException) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);

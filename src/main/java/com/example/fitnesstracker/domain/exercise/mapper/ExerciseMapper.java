@@ -1,6 +1,7 @@
 package com.example.fitnesstracker.domain.exercise.mapper;
 
 import com.example.fitnesstracker.domain.exercise.dto.ExerciseDTO;
+import com.example.fitnesstracker.domain.exercise.dto.ExerciseExtendedDTO;
 import com.example.fitnesstracker.domain.exercise.entity.Exercise;
 
 import org.mapstruct.Mapper;
@@ -10,4 +11,5 @@ import org.mapstruct.factory.Mappers;
 public interface ExerciseMapper {
     ExerciseMapper INSTANCE = Mappers.getMapper(ExerciseMapper.class);
     ExerciseDTO exerciseEntityToExerciseDto(Exercise e);
+    ExerciseExtendedDTO exerciseEntityToExerciseExtendedDto(Exercise e);
 }

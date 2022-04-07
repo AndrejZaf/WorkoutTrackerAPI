@@ -16,7 +16,8 @@ import java.util.UUID;
 public class BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "fitness_user_id_generator")
+    @SequenceGenerator(name = "fitness_user_id_generator", sequenceName = "fitness_user_id_seq", allocationSize = 1)
     private Long id;
 
     @NotNull

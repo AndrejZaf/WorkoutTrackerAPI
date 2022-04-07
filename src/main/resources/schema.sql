@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS fitness_user (
-    id bigint PRIMARY KEY,
+    id bigserial PRIMARY KEY,
     created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     deleted_on timestamp DEFAULT NULL,
     uid varchar(255) DEFAULT NULL,
@@ -12,14 +12,15 @@ CREATE TABLE IF NOT EXISTS fitness_user (
     password varchar(255) DEFAULT NULL,
     verification_code varchar(255) DEFAULT NULL,
     verification_expires_on timestamp DEFAULT NULL,
-    weight bigint DEFAULT NULL
+    weight bigint DEFAULT NULL,
+    image_url varchar(255) DEFAULT NULL
 );
 
 
 
 
 CREATE TABLE IF NOT EXISTS role (
-    id bigint PRIMARY KEY,
+    id bigserial PRIMARY KEY,
     created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     deleted_on timestamp(6) DEFAULT NULL,
     uid varchar(255) DEFAULT NULL,
@@ -28,7 +29,7 @@ CREATE TABLE IF NOT EXISTS role (
 
 
 
-CREATE TABLE IF NOT EXISTS user_roles (
+CREATE TABLE IF NOT EXISTS fitness_user_roles (
     user_id bigint NOT NULL,
     roles_id bigint NOT NULL,
     PRIMARY KEY (user_id,roles_id),
@@ -38,7 +39,7 @@ CREATE TABLE IF NOT EXISTS user_roles (
 
 
 CREATE TABLE IF NOT EXISTS exercise (
-    id bigint PRIMARY KEY,
+    id bigserial PRIMARY KEY,
     created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     deleted_on timestamp DEFAULT NULL,
     uid varchar(255) DEFAULT NULL,
@@ -51,7 +52,7 @@ CREATE TABLE IF NOT EXISTS exercise (
 
 
 CREATE TABLE IF NOT EXISTS workout (
-    id bigint PRIMARY KEY,
+    id bigserial PRIMARY KEY,
     created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     deleted_on timestamp DEFAULT NULL,
     uid varchar(255) DEFAULT NULL,
@@ -63,7 +64,7 @@ CREATE TABLE IF NOT EXISTS workout (
 
 
 CREATE TABLE IF NOT EXISTS workout_exercise (
-    id bigint PRIMARY KEY,
+    id bigserial PRIMARY KEY,
     created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     deleted_on timestamp DEFAULT NULL,
     uid varchar(255) DEFAULT NULL,
@@ -75,7 +76,7 @@ CREATE TABLE IF NOT EXISTS workout_exercise (
 
 
 CREATE TABLE IF NOT EXISTS exercise_set (
-    id bigint PRIMARY KEY,
+    id bigserial PRIMARY KEY,
     created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     deleted_on timestamp DEFAULT NULL,
     uid varchar(255) DEFAULT NULL,

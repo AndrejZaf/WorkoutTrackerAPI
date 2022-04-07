@@ -1,13 +1,12 @@
 package com.example.fitnesstracker.domain.exercise.dto;
 
-import com.example.fitnesstracker.domain.exercise.enumeration.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
-public class ExerciseDTO {
+public class ExerciseExtendedDTO {
 
     private LocalDateTime createdAt;
 
@@ -15,12 +14,11 @@ public class ExerciseDTO {
 
     private String name;
 
-//    private String bodyPart;
+    private String bodyPart;
 
     private String target;
 
     private String equipment;
 
-//    private String image;
-
+    private String image;
 }

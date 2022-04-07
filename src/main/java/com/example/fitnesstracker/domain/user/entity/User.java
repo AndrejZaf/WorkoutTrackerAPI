@@ -33,7 +33,7 @@ public class User extends BaseEntity {
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
 
-    private boolean enabled;
+    private boolean enabled = false;
 
     @NotNull
     @Column(columnDefinition = "VARCHAR(255)")
@@ -58,6 +58,8 @@ public class User extends BaseEntity {
     private Integer weight;
 
     private Integer height;
+
+    private String imageUrl;
 
     @OneToMany(mappedBy = "user")
     private Set<Workout> workouts;

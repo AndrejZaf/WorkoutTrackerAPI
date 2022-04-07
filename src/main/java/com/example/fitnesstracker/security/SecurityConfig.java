@@ -20,8 +20,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+
+import static java.util.Collections.singletonList;
 
 @Configuration
 @EnableWebSecurity
@@ -40,15 +49,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManagerBean());
         customAuthenticationFilter.setFilterProcessesUrl("/api/login");
         http.csrf().disable();
+        http.cors().configurationSource(corsConfigurationSource());
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests().antMatchers("/api/login/**", "/api/user/token/refresh/**").permitAll();
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/user/**").hasAuthority("ROLE_BRONZE");
-        http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/exercise/**").hasAuthority("ROLE_BRONZE");
+        http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/exercise/**").permitAll();
+//        http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/exercise/**").hasAuthority("ROLE_BRONZE");
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/workout/**").hasAuthority("ROLE_BRONZE");
         http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/user/**").permitAll();
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(customAuthenticationFilter);
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
     @Bean
@@ -64,5 +77,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
+    }
+
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        List<String> allowOrigins = Arrays.asList("*");
+        configuration.setAllowedOriginPatterns(allowOrigins);
+        configuration.setAllowedMethods(singletonList("*"));
+        configuration.setAllowedHeaders(singletonList("*"));
+        //in case authentication is enabled this flag MUST be set, otherwise CORS requests will fail
+        configuration.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }

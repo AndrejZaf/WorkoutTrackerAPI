@@ -10,12 +10,14 @@ INSERT INTO role (id, created_at, uid, name)
 VALUES(3, CURRENT_TIMESTAMP, 'b74c5290-8970-4eff-8c63-855859765c64', 'ROLE_PLATINUM')
 ON CONFLICT DO NOTHING;
 
-INSERT INTO fitness_user(id, created_at, deleted_on, uid, email, enabled, forgot_password_code, forgot_password_code_expires_on, height, measurement_system, password, verification_code, verification_expires_on, weight)
-VALUES(1, CURRENT_TIMESTAMP, null , 'f5ac187f-1302-407d-89a1-9a761ef777d0', 'andrej.zafirovski@gmail.com', true, '58191137-5070-41d5-a996-56e9e6c354a0', CURRENT_DATE, null , 'IMPERIAL_SYSTEM', '{bcrypt}$2a$10$62BdhZwJNCaUIwgTQnkdO.FZizJrYmeJVTYkUOkJlkqVoyBrpqHhy', '8f0cc255-099d-476e-a69f-6001b9c4b57d', CURRENT_DATE, null )
+INSERT INTO fitness_user(id, created_at, deleted_on, uid, email, enabled, forgot_password_code, forgot_password_code_expires_on, height, measurement_system, password, verification_code, verification_expires_on, weight, image_url)
+VALUES(1, CURRENT_TIMESTAMP, null , 'f5ac187f-1302-407d-89a1-9a761ef777d0', 'andrej.zafirovski@gmail.com', true, '58191137-5070-41d5-a996-56e9e6c354a0', CURRENT_DATE, null , 'IMPERIAL_SYSTEM', '{bcrypt}$2a$10$62BdhZwJNCaUIwgTQnkdO.FZizJrYmeJVTYkUOkJlkqVoyBrpqHhy', '8f0cc255-099d-476e-a69f-6001b9c4b57d', CURRENT_DATE, null, null)
 ON CONFLICT DO NOTHING;
 
-INSERT INTO user_roles (user_id, roles_id) VALUES(1, 1)
+INSERT INTO fitness_user_roles (user_id, roles_id) VALUES(1, 1)
 ON CONFLICT DO NOTHING;
+
+SELECT setval('fitness_user_id_seq', (SELECT MAX(id) FROM fitness_user)+1);
 
 
 INSERT INTO exercise(id, name, body_part, target, equipment, image) VALUES (0001, '3/4 Sit-up', 'Waist', 'Abs', 'Body Weight', 'http://d205bpvrqc9yn1.cloudfront.net/0001.gif') ON CONFLICT DO NOTHING;

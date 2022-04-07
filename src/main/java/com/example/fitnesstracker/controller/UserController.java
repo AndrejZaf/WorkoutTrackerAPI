@@ -25,6 +25,7 @@ import java.security.Principal;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.example.fitnesstracker.domain.user.mapper.CustomUserMapper.convertToUserExtendedDTO;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -41,6 +42,13 @@ public class UserController {
     @GetMapping
     public ResponseEntity<List<User>> getUsers(){
         return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
+    }
+
+    @GetMapping("/logged-user")
+    public ResponseEntity<UserExtendedDTO> getLoggedInUserData(Principal principal) {
+        User user = userService.getUser(principal.getName());
+        UserExtendedDTO userExtendedDTO = convertToUserExtendedDTO(user);
+        return new ResponseEntity<>(userExtendedDTO, HttpStatus.OK);
     }
 
     @PostMapping
