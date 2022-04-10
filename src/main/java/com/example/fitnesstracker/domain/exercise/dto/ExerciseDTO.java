@@ -1,6 +1,5 @@
 package com.example.fitnesstracker.domain.exercise.dto;
 
-import com.example.fitnesstracker.domain.exercise.enumeration.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -21,6 +20,6 @@ public class ExerciseDTO {
 
     private String equipment;
 
-//    private String image;
+    private String image;
 
 }

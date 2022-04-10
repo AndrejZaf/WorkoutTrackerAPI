@@ -14,6 +14,12 @@ import javax.persistence.*;
 @AllArgsConstructor
 public class Exercise extends BaseEntity {
 
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "exercise_id_generator")
+    @SequenceGenerator(name = "exercise_generator", sequenceName = "exercise_id_seq", allocationSize = 1)
+    private Long id;
+
     private String name;
 
 //    @Enumerated(value = EnumType.STRING)

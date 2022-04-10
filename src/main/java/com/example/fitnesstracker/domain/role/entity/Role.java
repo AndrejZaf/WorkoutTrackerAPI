@@ -14,6 +14,11 @@ import javax.persistence.*;
 @AllArgsConstructor
 public class Role extends BaseEntity {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "role_id_generator")
+    @SequenceGenerator(name = "role_id_generator", sequenceName = "role_id_seq", allocationSize = 1)
+    private Long id;
+
     @NotNull
     private String name;
 }

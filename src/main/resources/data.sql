@@ -21,7 +21,7 @@ SELECT setval('fitness_user_id_seq', (SELECT MAX(id) FROM fitness_user)+1);
 
 
 INSERT INTO exercise(id, name, body_part, target, equipment, image) VALUES (0001, '3/4 Sit-up', 'Waist', 'Abs', 'Body Weight', 'http://d205bpvrqc9yn1.cloudfront.net/0001.gif') ON CONFLICT DO NOTHING;
-INSERT INTO exercise(id, name, body_part, target, equipment, image) VALUES (0002, '45â° Side Bend', 'Waist', 'Abs', 'Body Weight', 'http://d205bpvrqc9yn1.cloudfront.net/0002.gif') ON CONFLICT DO NOTHING;
+INSERT INTO exercise(id, name, body_part, target, equipment, image) VALUES (0002, '45 Degree Side Bend', 'Waist', 'Abs', 'Body Weight', 'http://d205bpvrqc9yn1.cloudfront.net/0002.gif') ON CONFLICT DO NOTHING;
 INSERT INTO exercise(id, name, body_part, target, equipment, image) VALUES (0003, 'Air Bike', 'Waist', 'Abs', 'Body Weight', 'http://d205bpvrqc9yn1.cloudfront.net/0003.gif') ON CONFLICT DO NOTHING;
 INSERT INTO exercise(id, name, body_part, target, equipment, image) VALUES (1512, 'All Fours Squad Stretch', 'Upper Legs', 'Quads', 'Body Weight', 'http://d205bpvrqc9yn1.cloudfront.net/1512.gif') ON CONFLICT DO NOTHING;
 INSERT INTO exercise(id, name, body_part, target, equipment, image) VALUES (0006, 'Alternate Heel Touchers', 'Waist', 'Abs', 'Body Weight', 'http://d205bpvrqc9yn1.cloudfront.net/0006.gif') ON CONFLICT DO NOTHING;
@@ -1179,12 +1179,12 @@ INSERT INTO exercise(id, name, body_part, target, equipment, image) VALUES (3361
 INSERT INTO exercise(id, name, body_part, target, equipment, image) VALUES (2142, 'Ski Ergometer', 'Upper Arms', 'Triceps', 'Skierg Machine', 'http://d205bpvrqc9yn1.cloudfront.net/2142.gif') ON CONFLICT DO NOTHING;
 INSERT INTO exercise(id, name, body_part, target, equipment, image) VALUES (3671, 'Ski Step', 'Cardio', 'Cardiovascular System', 'Body Weight', 'http://d205bpvrqc9yn1.cloudfront.net/3671.gif') ON CONFLICT DO NOTHING;
 INSERT INTO exercise(id, name, body_part, target, equipment, image) VALUES (3304, 'Skin The Cat', 'Back', 'Upper Back', 'Body Weight', 'http://d205bpvrqc9yn1.cloudfront.net/3304.gif') ON CONFLICT DO NOTHING;
-INSERT INTO exercise(id, name, body_part, target, equipment, image) VALUES (1425, 'Sled 45 Degrees One Leg Press', 'Upper Legs', 'Glutes', 'Sled Machine', 'http://d205bpvrqc9yn1.cloudfront.net/1425.gif') ON CONFLICT DO NOTHING;
-INSERT INTO exercise(id, name, body_part, target, equipment, image) VALUES (0738, 'Sled 45ð²â° Calf Press', 'Lower Legs', 'Calves', 'Sled Machine', 'http://d205bpvrqc9yn1.cloudfront.net/0738.gif') ON CONFLICT DO NOTHING;
-INSERT INTO exercise(id, name, body_part, target, equipment, image) VALUES (0739, 'Sled 45ð²â° Leg Press', 'Upper Legs', 'Glutes', 'Sled Machine', 'http://d205bpvrqc9yn1.cloudfront.net/0739.gif') ON CONFLICT DO NOTHING;
-INSERT INTO exercise(id, name, body_part, target, equipment, image) VALUES (1464, 'Sled 45ð²â° Leg Press (back Pov)', 'Upper Legs', 'Glutes', 'Sled Machine', 'http://d205bpvrqc9yn1.cloudfront.net/1464.gif') ON CONFLICT DO NOTHING;
-INSERT INTO exercise(id, name, body_part, target, equipment, image) VALUES (1463, 'Sled 45ð²â° Leg Press (side Pov)', 'Upper Legs', 'Glutes', 'Sled Machine', 'http://d205bpvrqc9yn1.cloudfront.net/1463.gif') ON CONFLICT DO NOTHING;
-INSERT INTO exercise(id, name, body_part, target, equipment, image) VALUES (0740, 'Sled 45ð²â° Leg Wide Press', 'Upper Legs', 'Glutes', 'Sled Machine', 'http://d205bpvrqc9yn1.cloudfront.net/0740.gif') ON CONFLICT DO NOTHING;
+INSERT INTO exercise(id, name, body_part, target, equipment, image) VALUES (1425, 'Sled 45 Degree One Leg Press', 'Upper Legs', 'Glutes', 'Sled Machine', 'http://d205bpvrqc9yn1.cloudfront.net/1425.gif') ON CONFLICT DO NOTHING;
+INSERT INTO exercise(id, name, body_part, target, equipment, image) VALUES (0738, 'Sled 45 Degree Calf Press', 'Lower Legs', 'Calves', 'Sled Machine', 'http://d205bpvrqc9yn1.cloudfront.net/0738.gif') ON CONFLICT DO NOTHING;
+INSERT INTO exercise(id, name, body_part, target, equipment, image) VALUES (0739, 'Sled 45 Degree Leg Press', 'Upper Legs', 'Glutes', 'Sled Machine', 'http://d205bpvrqc9yn1.cloudfront.net/0739.gif') ON CONFLICT DO NOTHING;
+INSERT INTO exercise(id, name, body_part, target, equipment, image) VALUES (1464, 'Sled 45 Degree Leg Press (back Pov)', 'Upper Legs', 'Glutes', 'Sled Machine', 'http://d205bpvrqc9yn1.cloudfront.net/1464.gif') ON CONFLICT DO NOTHING;
+INSERT INTO exercise(id, name, body_part, target, equipment, image) VALUES (1463, 'Sled 45 Degree Leg Press (side Pov)', 'Upper Legs', 'Glutes', 'Sled Machine', 'http://d205bpvrqc9yn1.cloudfront.net/1463.gif') ON CONFLICT DO NOTHING;
+INSERT INTO exercise(id, name, body_part, target, equipment, image) VALUES (0740, 'Sled 45 Degree Leg Wide Press', 'Upper Legs', 'Glutes', 'Sled Machine', 'http://d205bpvrqc9yn1.cloudfront.net/0740.gif') ON CONFLICT DO NOTHING;
 INSERT INTO exercise(id, name, body_part, target, equipment, image) VALUES (1391, 'Sled Calf Press On Leg Press', 'Lower Legs', 'Calves', 'Sled Machine', 'http://d205bpvrqc9yn1.cloudfront.net/1391.gif') ON CONFLICT DO NOTHING;
 INSERT INTO exercise(id, name, body_part, target, equipment, image) VALUES (0741, 'Sled Closer Hack Squat', 'Upper Legs', 'Glutes', 'Sled Machine', 'http://d205bpvrqc9yn1.cloudfront.net/0741.gif') ON CONFLICT DO NOTHING;
 INSERT INTO exercise(id, name, body_part, target, equipment, image) VALUES (0742, 'Sled Forward Angled Calf Raise', 'Lower Legs', 'Calves', 'Sled Machine', 'http://d205bpvrqc9yn1.cloudfront.net/0742.gif') ON CONFLICT DO NOTHING;

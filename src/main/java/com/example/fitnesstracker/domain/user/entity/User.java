@@ -23,6 +23,11 @@ import java.util.UUID;
 @Table(name = "fitness_user")
 public class User extends BaseEntity {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "fitness_user_id_generator")
+    @SequenceGenerator(name = "fitness_user_id_generator", sequenceName = "fitness_user_id_seq", allocationSize = 1)
+    private Long id;
+
     @NotNull
     private String email;
 

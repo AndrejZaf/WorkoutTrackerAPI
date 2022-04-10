@@ -15,7 +15,13 @@ import java.util.Set;
 @Data
 public class WorkoutExercise extends BaseEntity {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "workout_exercise_id_generator")
+    @SequenceGenerator(name = "workout_exercise_id_generator", sequenceName = "workout_exercise_id_seq", allocationSize = 1)
+    private Long id;
+
     @OneToMany(mappedBy = "workoutExercise")
+    @EqualsAndHashCode.Exclude
     private Set<ExerciseSet> set;
 
     @ManyToOne

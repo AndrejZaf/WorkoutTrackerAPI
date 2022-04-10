@@ -12,7 +12,13 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(exclude = {"workoutExercises"})
 public class Workout extends BaseEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "workout_id_generator")
+    @SequenceGenerator(name = "workout_id_generator", sequenceName = "workout_id_seq", allocationSize = 1)
+    private Long id;
 
     private String name;
 

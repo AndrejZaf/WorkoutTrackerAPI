@@ -143,7 +143,7 @@ public class WorkoutServiceImpl implements WorkoutService {
                 exerciseSet.setReps(set.getReps());
                 exerciseSet.setWeight(set.getWeight());
                 exerciseSet.setWorkoutExercise(workoutExercise);
-                exerciseSetRepository.save(exerciseSet);
+                exerciseSet = exerciseSetRepository.save(exerciseSet);
                 exerciseSets.add(exerciseSet);
             });
             workoutExercise.setSet(exerciseSets);

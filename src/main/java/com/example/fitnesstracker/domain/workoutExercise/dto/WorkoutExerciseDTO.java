@@ -11,5 +11,7 @@ import java.util.List;
 public class WorkoutExerciseDTO {
     private String uid;
 
+    private String name;
+
     private List<ExerciseSetDTO> sets;
 }
