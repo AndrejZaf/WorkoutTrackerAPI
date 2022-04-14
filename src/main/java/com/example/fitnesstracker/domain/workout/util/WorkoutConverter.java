@@ -16,7 +16,7 @@ public class WorkoutConverter {
             List<ExerciseSetDTO> exerciseSetResponse = workoutExercises.getSet().stream().map(exerciseSet ->
                     new ExerciseSetDTO(exerciseSet.getReps(), exerciseSet.getWeight(), exerciseSet.getRestPeriod())).collect(Collectors.toList());
 
-            return new WorkoutExerciseDTO(workoutExercises.getExercise().getUid().toString(), workoutExercises.getExercise().getName(), exerciseSetResponse);
+            return new WorkoutExerciseDTO(workoutExercises.getExercise().getUid().toString(), workoutExercises.getExercise().getName(), workoutExercises.getExercise().getImage(), workoutExercises.getExercise().getTarget(), exerciseSetResponse);
         }).collect(Collectors.toList());
 
         return new WorkoutDTO(workout.getName(), workout.getUid().toString(), workoutExerciseResponse);

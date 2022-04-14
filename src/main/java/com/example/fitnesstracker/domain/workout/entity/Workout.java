@@ -6,6 +6,7 @@ import com.example.fitnesstracker.domain.workoutExercise.entity.WorkoutExercise;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -27,5 +28,5 @@ public class Workout extends BaseEntity {
     private User user;
 
     @OneToMany(mappedBy = "workout")
-    private Set<WorkoutExercise> workoutExercises;
+    private List<WorkoutExercise> workoutExercises;
 }

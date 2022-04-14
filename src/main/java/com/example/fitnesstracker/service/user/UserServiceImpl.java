@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setVerificationExpiresOn(LocalDateTime.now().plusDays(10));
         user = userRepository.save(user);
 
-        String link = String.format("http://localhost:8080/api/user/verify/%s",user.getVerificationCode());
+        String link = String.format("http://localhost:3000/%s/verify",user.getVerificationCode());
         emailService.sendVerificationEmail(user.getEmail(), EmailUtil.verifyEmail(user.getEmail(), link));
         return user;
     }
@@ -107,12 +107,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public void requestVerificationEmail(UserVerificationEmailDTO userVerificationEmailDto) {
         User user = userRepository.findByEmail(userVerificationEmailDto.getEmail()).orElseThrow(UserNotFoundException::new);
+        if(user.isEnabled()) {
+            throw new UserAlreadyVerifiedException();
+        }
         UUID newUid = UUID.randomUUID();
         user.setVerificationCode(newUid);
         user.setVerificationExpiresOn(LocalDateTime.now().plusDays(10));
         userRepository.save(user);
 
-        String link = String.format("http://localhost:8080/api/user/verify/%s", newUid);
+        String link = String.format("http://localhost:3000/%s/verify", newUid);
         emailService.sendVerificationEmail(user.getEmail(), EmailUtil.verifyEmail(user.getEmail(), link));
     }
 
@@ -124,7 +127,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setForgotPasswordCodeExpiresOn(LocalDateTime.now().plusDays(10));
         userRepository.save(user);
 
-        String link = String.format("http://localhost:8080/api/user/reset-password/%s", newUid);
+        String link = String.format("http://localhost:3000/%s/reset-password", newUid);
         emailService.sendForgotPasswordEmail(user.getEmail(), EmailUtil.forgotPasswordEmail(user.getEmail(), link));
     }
 

@@ -13,5 +13,9 @@ public class WorkoutExerciseDTO {
 
     private String name;
 
+    private String image;
+
+    private String target;
+
     private List<ExerciseSetDTO> sets;
 }

@@ -53,10 +53,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests().antMatchers("/api/login/**", "/api/user/token/refresh/**").permitAll();
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/user/**").hasAuthority("ROLE_BRONZE");
-        http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/exercise/**").permitAll();
-//        http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/exercise/**").hasAuthority("ROLE_BRONZE");
-        http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/workout/**").hasAuthority("ROLE_BRONZE");
         http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/user/**").permitAll();
+
+        http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/exercise/**").permitAll();
+
+        http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/workout/**").permitAll();
+        http.authorizeRequests().antMatchers(HttpMethod.PUT, "/api/workout/**").hasAuthority("ROLE_BRONZE");
+        http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/workout/**").hasAuthority("ROLE_BRONZE");
+        http.authorizeRequests().antMatchers(HttpMethod.DELETE, "/api/workout/**").hasAuthority("ROLE_BRONZE");
+
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(customAuthenticationFilter);
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);

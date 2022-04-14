@@ -6,10 +6,11 @@ import com.example.fitnesstracker.domain.workout.dto.ExerciseToExistingWorkoutDT
 import com.example.fitnesstracker.domain.workout.entity.Workout;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 public interface WorkoutService {
-    Set<Workout> getWorkoutsForUser(String email);
+    List<Workout> getWorkoutsForUser(String email);
     String createWorkoutWithExercises(String username, CreateWorkoutDTO createWorkoutDto);
     String addExerciseToExistingWorkout(String username, ExerciseToExistingWorkoutDTO exerciseToExistingWorkoutDto);
     Workout getWorkoutByUid(String uid);

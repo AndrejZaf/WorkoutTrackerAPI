@@ -12,6 +12,7 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -67,5 +68,5 @@ public class User extends BaseEntity {
     private String imageUrl;
 
     @OneToMany(mappedBy = "user")
-    private Set<Workout> workouts;
+    private List<Workout> workouts;
 }
