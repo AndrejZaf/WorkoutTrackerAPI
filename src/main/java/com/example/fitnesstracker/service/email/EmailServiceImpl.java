@@ -24,7 +24,7 @@ public class EmailServiceImpl implements EmailService {
             helper.setText(email, true);
             helper.setTo(to);
             helper.setSubject("Verify your account registration");
-            helper.setFrom("zaftestapp@gmail.com");
+            helper.setFrom("andrej.zafirovski@yahoo.com");
             javaMailSender.send(mimeMessage);
         } catch(MessagingException e){
             throw new IllegalStateException("Failed");
@@ -40,7 +40,7 @@ public class EmailServiceImpl implements EmailService {
             helper.setText(email, true);
             helper.setTo(to);
             helper.setSubject("Password Reset Requested");
-            helper.setFrom("zaftestapp@gmail.com");
+            helper.setFrom("andrej.zafirovski@yahoo.com");
             javaMailSender.send(mimeMessage);
         } catch(MessagingException e){
             throw new IllegalStateException("Failed");
